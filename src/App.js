@@ -5,12 +5,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-    	items: [
-      	new Task("tache 1",true),
-        new Task("tache 2",true),
-        new Task("tache 3",false),
-        new Task("tache 4",false)
-      ],
+    	items: [],
       filter: "" // Ajout de l'état pour le filtre
     };
     // Bind de la fonction addTask pour pouvoir accéder à this.setState
@@ -21,6 +16,11 @@ class App extends React.Component {
     this.moveTaskUp = this.moveTaskUp.bind(this);
     this.moveTaskDown = this.moveTaskDown.bind(this);
   }
+
+  componentDidMount() {
+    // Appeler loadTasksFromLocalStorage après le montage du composant dans le DOM
+    this.loadTasksFromLocalStorage();
+  }
   
   addTask() {
   	// saisi nom tâche
@@ -29,7 +29,7 @@ class App extends React.Component {
     // Création d'une nouvelle tâche avec un texte par défaut et non faite
     const newTask = new Task(taskName,false);
     // Mise à jour de l'état en ajoutant la nouvelle tâche à la liste existante
-    this.setState({items: [...this.state.items, newTask]});
+    this.setState({items: [...this.state.items, newTask]}, () => { this.saveTasksToLocalStorage()});
   }
   
   removeTask(indexToRemove){
@@ -40,9 +40,10 @@ class App extends React.Component {
     	updatedItems.splice(indexToRemove, 1);
     }
     // Mise à jour de l'état avec la nouvelle liste des tâches
-    this.setState({
-      items: updatedItems
-    });
+    this.setState({items: updatedItems}, () => { this.saveTasksToLocalStorage()});
+
+    // Appeler saveTasksToLocalStorage après avoir mis à jour l'état des tâches
+    this.saveTasksToLocalStorage();
   }
   
   toggleTask(indexToToggle) {
@@ -51,16 +52,12 @@ class App extends React.Component {
     // Basculement de l'état done de la tâche à l'index spécifié
     updatedItems[indexToToggle].isChecking = !updatedItems[indexToToggle].isChecking;
     // Mise à jour de l'état avec la nouvelle liste des tâches
-    this.setState({
-      items: updatedItems
-    });
+    this.setState({items: updatedItems}, () => { this.saveTasksToLocalStorage()});
   }
   
   handleFilterChange(event) {
     // Mettre à jour l'état du filtre avec la valeur saisie
-    this.setState({
-      filter: event.target.value
-    });
+    this.setState({filter: event.target.value}, () => { this.saveTasksToLocalStorage()});
   }
   
   moveTaskUp(indexToMove) {
@@ -69,9 +66,7 @@ class App extends React.Component {
       const temp = updatedItems[indexToMove];
       updatedItems[indexToMove] = updatedItems[indexToMove - 1];
       updatedItems[indexToMove - 1] = temp;
-      this.setState({
-        items: updatedItems
-      });
+      this.setState({items: updatedItems}, () => { this.saveTasksToLocalStorage()});
     }
 	}
 
@@ -81,9 +76,7 @@ class App extends React.Component {
       const temp = updatedItems[indexToMove];
       updatedItems[indexToMove] = updatedItems[indexToMove + 1];
       updatedItems[indexToMove + 1] = temp;
-      this.setState({
-        items: updatedItems
-      });
+      this.setState({items: updatedItems}, () => { this.saveTasksToLocalStorage()});
     }
   }
 
@@ -100,15 +93,20 @@ class App extends React.Component {
   loadTasksFromLocalStorage() {
     // Récupérer la chaîne JSON des tâches depuis le localStorage
     const tasksJson = localStorage.getItem('tasks');
+    const taskList = []
     
     // Si des tâches sont trouvées dans le localStorage, les charger dans l'état du composant
     if (tasksJson) {
       const tasks = JSON.parse(tasksJson); // Désérialiser la chaîne JSON en objets JavaScript
-      this.setState({ items: tasks });
+      for (const task in tasks) {
+        taskList.push(new Task(tasks[task].title,tasks[task].isChecking))
+      }
+      this.setState({ items: taskList });
     }
   }
   
   render() {
+
   	// Compter le nombre de tâches done
     const tasksDone = this.state.items.filter(item => item.isChecking).length;
     // Compter le nombre de tâches not done
@@ -122,7 +120,7 @@ class App extends React.Component {
     
     return (
       <div>
-        <h2>Todos:</h2>
+        <h2>Todo:</h2>
         <input type='text' id='filter' placeholder='filtre' value={this.state.filter} onChange={this.handleFilterChange}/> <br/>
         <ol>
         {filteredTasks.map((item, index) => (
