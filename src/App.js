@@ -1,5 +1,6 @@
 import React from 'react';
 import Task from './Task';
+import Header from './component/Header';
 
 class App extends React.Component {
   constructor(props) {
@@ -110,7 +111,6 @@ class App extends React.Component {
   	// Compter le nombre de tâches done
     const tasksDone = this.state.items.filter(item => item.isChecking).length;
     // Compter le nombre de tâches not done
-    const tasksNotDone = this.state.items.filter(item => !item.isChecking).length;
     const taskNomber = this.state.items.length;
     
     // Filtrer les tâches en fonction de la valeur du filtre
@@ -120,6 +120,7 @@ class App extends React.Component {
     
     return (
       <div>
+        <Header totalTasks={taskNomber} tasksDone={tasksDone} />
         <h2>Todo:</h2>
         <input type='text' id='filter' placeholder='filtre' value={this.state.filter} onChange={this.handleFilterChange}/> <br/>
         <ol>
@@ -135,9 +136,6 @@ class App extends React.Component {
           </li>
         ))}
         </ol> <br/>
-        <p>Tâches faites : {tasksDone}</p>
-        <p>Tâches à faire : {tasksNotDone}</p>
-        <p>nombre de Tâches : {taskNomber}</p> <br/>
         <button onClick={this.addTask}>ajouter une tâche</button>
       </div>
     )
