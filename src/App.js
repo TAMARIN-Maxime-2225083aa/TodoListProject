@@ -24,10 +24,7 @@ class App extends React.Component {
     this.loadTasksFromLocalStorage();
   }
   
-  addTask() {
-  	// saisi nom tâche
-    const taskName = prompt("un nom pour cette tâche")
-  
+  addTask(taskName) {
     // Création d'une nouvelle tâche avec un texte par défaut et non faite
     const newTask = new Task(taskName,false);
     // Mise à jour de l'état en ajoutant la nouvelle tâche à la liste existante

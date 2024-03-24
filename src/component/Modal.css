@@ -1,0 +1,24 @@
+/* Modal.css */
+
+.modal {
+    display: none; /* Par défaut, le modal est caché */
+    position: fixed; /* Position fixe pour rester au-dessus du contenu */
+    z-index: 1; /* Empile le modal au-dessus de tout le reste */
+    left: 0;
+    top: 0;
+    width: 100%; /* Couvre toute la largeur de la page */
+    height: 100%; /* Couvre toute la hauteur de la page */
+    overflow: auto; /* Ajoute un défilement si nécessaire */
+    background-color: rgba(0,0,0,0.4); /* Fond semi-transparent pour obscurcir le contenu sous le modal */
+  }
+  
+  .modal-content {
+    background-color: #fefefe; /* Couleur de fond du modal */
+    margin: 15% auto; /* Centre le modal verticalement et horizontalement */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Largeur du contenu du modal */
+  }
+  
+  /* Styles supplémentaires peuvent être ajoutés selon les besoins */
+  
