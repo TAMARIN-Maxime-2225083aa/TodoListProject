@@ -1,6 +1,7 @@
 import React from 'react';
 import Task from './Task';
 import Header from './component/Header';
+import Footer from './component/Footer';
 
 class App extends React.Component {
   constructor(props) {
@@ -122,7 +123,6 @@ class App extends React.Component {
       <div>
         <Header totalTasks={taskNomber} tasksDone={tasksDone} />
         <h2>Todo:</h2>
-        <input type='text' id='filter' placeholder='filtre' value={this.state.filter} onChange={this.handleFilterChange}/> <br/>
         <ol>
         {filteredTasks.map((item, index) => (
           <li key={index}>
@@ -136,7 +136,7 @@ class App extends React.Component {
           </li>
         ))}
         </ol> <br/>
-        <button onClick={this.addTask}>ajouter une tâche</button>
+        <Footer filter={this.state.filter} handleFilterChange={this.handleFilterChange} addTask={this.addTask}/>
       </div>
     )
   }
