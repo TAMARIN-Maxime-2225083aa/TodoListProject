@@ -3,11 +3,19 @@ import Task from './Task';
 import Header from './component/Header';
 import Footer from './component/Footer';
 
+// Import du fichier CSS pour les styles de l'application
+import './App.css';
+
+// import des icones nécessaires
+import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
     	items: [],
+      category: [{name:'aucune',icon:null},{name:'home',icon:HomeIcon},{name:'work',icon:WorkIcon}],
       filter: "" // Ajout de l'état pour le filtre
     };
     // Bind de la fonction addTask pour pouvoir accéder à this.setState
@@ -24,9 +32,9 @@ class App extends React.Component {
     this.loadTasksFromLocalStorage();
   }
   
-  addTask(taskName) {
+  addTask(taskName,taskCategory) {
     // Création d'une nouvelle tâche avec un texte par défaut et non faite
-    const newTask = new Task(taskName,false);
+    const newTask = new Task(taskName,false,taskCategory);
     // Mise à jour de l'état en ajoutant la nouvelle tâche à la liste existante
     this.setState({items: [...this.state.items, newTask]}, () => { this.saveTasksToLocalStorage()});
   }
@@ -98,7 +106,7 @@ class App extends React.Component {
     if (tasksJson) {
       const tasks = JSON.parse(tasksJson); // Désérialiser la chaîne JSON en objets JavaScript
       for (const task in tasks) {
-        taskList.push(new Task(tasks[task].title,tasks[task].isChecking))
+        taskList.push(new Task(tasks[task].title,tasks[task].isChecking,tasks[task].category))
       }
       this.setState({ items: taskList });
     }
@@ -117,23 +125,27 @@ class App extends React.Component {
     );
     
     return (
-      <div>
+      <div className='App'>
         <Header totalTasks={taskNomber} tasksDone={tasksDone} />
         <h2>Todo:</h2>
-        <ol>
+        <ol className='todo-list'>
         {filteredTasks.map((item, index) => (
-          <li key={index}>
+          <li key={index} className="todo-item">
             <label>
               <input type="checkbox" checked={item.isChecking} onChange={() => this.toggleTask(index)} />
               <span className={item.isChecking ? "done" : ""}>{item.title}</span>
             </label>
-            <button onClick={() => this.removeTask(index)}>Supprimer</button>
-            <button onClick={() => this.moveTaskUp(index)} disabled={index === 0}>↑</button>
-            <button onClick={() => this.moveTaskDown(index)} disabled={index === this.state.items.length - 1}>↓</button>
+            <div className="task-icons">
+              {item.category === 'home' && <HomeIcon />} {/* Icône pour la catégorie 'home' */}
+              {item.category === 'work' && <WorkIcon />} {/* Icône pour la catégorie 'work' */}
+              <button onClick={() => this.removeTask(index)}>Supprimer</button>
+              <button onClick={() => this.moveTaskUp(index)} disabled={index === 0}>↑</button>
+              <button onClick={() => this.moveTaskDown(index)} disabled={index === this.state.items.length - 1}>↓</button>
+            </div>
           </li>
         ))}
         </ol> <br/>
-        <Footer filter={this.state.filter} handleFilterChange={this.handleFilterChange} addTask={this.addTask}/>
+        <Footer filter={this.state.filter} category={this.state.category} handleFilterChange={this.handleFilterChange} addTask={this.addTask}/>
       </div>
     )
   }
