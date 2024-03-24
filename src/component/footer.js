@@ -73,7 +73,7 @@ class Footer extends React.Component {
         {/* Popup affiché si pas de nom de tache renseigné */}
         <Modal show={this.state.showErrorModal}>
             <h1>impossible d'avoir une tache sans titre</h1>
-            <button onClick={this.toggleErrorModal}>Fermer</button>
+            <button onClick={this.toggleErrorModal} className='add-task-button'>Fermer</button>
         </Modal>
       </div>
     );

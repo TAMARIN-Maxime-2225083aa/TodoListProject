@@ -38,10 +38,12 @@
   border: none;
   cursor: pointer;
   margin-left: 5px;
+  margin: 2px;
 }
 
 .task-icons button:hover {
   color: #4caf50;
+  margin: 2px;
 }
 
 .done {

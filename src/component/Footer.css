@@ -12,6 +12,7 @@
     padding: 8px;
     border-radius: 5px;
     border: 1px solid #ddd;
+    margin: 2px;
   }
   
   .add-task-button {
@@ -21,9 +22,11 @@
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
+    margin: 2px;
   }
   
   .add-task-button:hover {
     background-color: #45a049;
+    margin: 2px;
   }
   
